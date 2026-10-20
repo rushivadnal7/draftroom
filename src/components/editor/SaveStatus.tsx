@@ -16,10 +16,11 @@ export function SaveStatus({ state }: { state: SaveState }) {
   return (
     <span
       aria-live="polite"
-      className="inline-flex w-[104px] shrink-0 items-center justify-center gap-1.5 rounded-full bg-surface-muted px-2.5 py-1 text-xs font-medium text-ink"
+      aria-label={LABEL[state]}
+      className="inline-flex w-7 shrink-0 items-center justify-center gap-1.5 rounded-full bg-surface-muted px-2.5 py-1 text-xs font-medium text-ink sm:w-[104px]"
     >
-      <span className={`size-1.5 rounded-full ${DOT_CLASS[state]}`} />
-      {LABEL[state]}
+      <span className={`size-1.5 shrink-0 rounded-full ${DOT_CLASS[state]}`} />
+      <span className="hidden sm:inline">{LABEL[state]}</span>
     </span>
   );
 }

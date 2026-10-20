@@ -29,14 +29,14 @@ export function ExportMenu({ title, getHtml }: { title: string; getHtml: () => s
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-9 items-center gap-1.5 rounded-full bg-surface-muted px-4 text-sm font-medium text-ink transition hover:bg-border/60"
+        className="flex h-9 items-center gap-1.5 rounded-full bg-surface-muted px-2.5 text-sm font-medium text-ink transition hover:bg-border/60 sm:px-4"
       >
         <Download className="size-3.5" strokeWidth={1.75} />
-        Export
+        <span className="hidden sm:inline">Export</span>
       </button>
       {open && (
         <div
-          className="absolute right-0 top-full z-20 mt-2 w-48 rounded-[var(--radius-panel)] bg-surface p-1.5 shadow-[var(--shadow-float)]"
+          className="absolute right-0 top-full z-20 mt-2 w-44 max-w-[calc(100vw-1.5rem)] rounded-[var(--radius-panel)] bg-surface p-1.5 shadow-[var(--shadow-float)] sm:w-48"
           onMouseLeave={() => setOpen(false)}
         >
           <button

@@ -24,7 +24,7 @@ export function Dialog({
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           <motion.div
             className="absolute inset-0 bg-ink/30"
             initial={{ opacity: 0 }}
@@ -36,7 +36,7 @@ export function Dialog({
           <motion.div
             role="dialog"
             aria-modal="true"
-            className="relative w-[min(480px,92vw)] rounded-[var(--radius-card)] bg-surface p-6 shadow-[var(--shadow-dialog)]"
+            className="relative max-h-[85vh] w-[min(480px,92vw)] overflow-y-auto rounded-[var(--radius-card)] bg-surface p-4 shadow-[var(--shadow-dialog)] sm:p-6"
             initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}

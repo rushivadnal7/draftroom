@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { UserSwitcher } from "@/components/UserSwitcher";
+import { Logo } from "@/components/Logo";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
@@ -15,8 +16,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
-      <header className="flex h-16 shrink-0 items-center justify-between border-b border-border bg-surface px-6">
-        <Link href="/dashboard" className="text-sm font-semibold text-ink">
+      <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-border bg-surface px-3 sm:px-6">
+        <Link href="/dashboard" className="flex shrink-0 items-center gap-2 text-sm font-semibold text-ink">
+          <Logo className="size-7 shrink-0" />
           Draftroom
         </Link>
         <UserSwitcher

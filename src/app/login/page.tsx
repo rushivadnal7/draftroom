@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
+import { Logo } from "@/components/Logo";
 
 export default async function LoginPage() {
   const current = await getCurrentUser();
@@ -20,12 +21,16 @@ export default async function LoginPage() {
       />
 
       <div className="relative z-10 w-full max-w-sm">
-        <h1 className="text-center text-5xl font-medium leading-[1.05] tracking-tight text-white md:text-6xl">
+        <div className="flex items-center justify-center gap-2">
+          <Logo className="size-8" />
+          <span className="text-sm font-semibold tracking-tight text-white">Draftroom</span>
+        </div>
+        <h1 className="mt-6 text-center text-4xl font-medium leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl">
           Draft together.
           <br />
           Share with confidence.
         </h1>
-        <p className="mt-4 text-center text-sm text-white/60">Draftroom - pick a user to continue.</p>
+        <p className="mt-4 text-center text-sm text-white/60">Pick a user to continue.</p>
 
         <div className="mt-10 flex flex-col gap-3">
           {users.map((user) => (

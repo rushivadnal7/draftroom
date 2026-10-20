@@ -43,7 +43,7 @@ export function DocumentCard({
           <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-surface-muted">
             <FileText className="size-3.5 text-ink-muted" strokeWidth={1.75} />
           </span>
-          <p className="truncate text-base font-medium">{doc.title}</p>
+          <p className="min-w-0 flex-1 truncate text-base font-medium">{doc.title}</p>
         </div>
         <p className="mt-2 line-clamp-2 flex-1 text-sm text-ink-muted">
           {doc.preview || <span className="italic text-ink-muted/60">No content yet</span>}
@@ -52,7 +52,7 @@ export function DocumentCard({
           <span className={`inline-flex h-6 shrink-0 items-center rounded-full px-2.5 text-xs font-medium ${rolePillClass}`}>
             {rolePillLabel}
           </span>
-          <span className="truncate text-xs text-ink-muted tabular-nums">
+          <span className="min-w-0 flex-1 truncate text-right text-xs text-ink-muted tabular-nums">
             {subtitle ? `${subtitle} · ${timeAgo(doc.updatedAt)}` : timeAgo(doc.updatedAt)}
           </span>
         </div>

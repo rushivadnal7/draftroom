@@ -109,7 +109,7 @@ export function ShareDialog({
           {readyCheck.matches.map((match, i) => (
             <li
               key={i}
-              className="rounded-full bg-orange-soft px-3 py-1.5 text-xs text-ink"
+              className="break-words rounded-[var(--radius-control)] bg-orange-soft px-3 py-1.5 text-xs text-ink"
               title={match.snippet}
             >
               <span className="font-medium">{match.text}</span>
@@ -156,7 +156,7 @@ export function ShareDialog({
           <p className="text-sm text-ink-muted">No other seeded users to share with.</p>
         )}
         {shareableUsers.map((u) => (
-          <div key={u.id} className="flex items-center justify-between gap-3">
+          <div key={u.id} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-center gap-2">
               <span
                 className="flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium text-white ring-2 ring-surface"
@@ -169,14 +169,14 @@ export function ShareDialog({
                 <span className="block text-xs text-ink-muted">{u.title}</span>
               </span>
             </div>
-            <div className="flex shrink-0 gap-1">
+            <div className="flex gap-1 sm:shrink-0">
               {(["NONE", "VIEWER", "EDITOR"] as const).map((option) => (
                 <button
                   key={option}
                   type="button"
                   disabled={pending === u.id}
                   onClick={() => requestRole(u.id, option)}
-                  className={`h-7 rounded-full px-2.5 text-xs font-medium transition disabled:opacity-60 ${
+                  className={`h-7 flex-1 rounded-full px-2.5 text-xs font-medium transition disabled:opacity-60 sm:flex-none ${
                     roles[u.id] === option
                       ? option === "EDITOR"
                         ? "bg-lime text-ink"

@@ -51,7 +51,7 @@ export function DashboardClient({
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
+    <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -64,11 +64,11 @@ export function DashboardClient({
             className="pointer-events-none absolute -right-10 -top-10 size-32 rounded-full opacity-40 blur-2xl"
             style={{ background: "radial-gradient(circle, var(--color-lime) 0%, transparent 70%)" }}
           />
-          <div className="relative flex items-center gap-2">
-            <span className="grid size-7 place-items-center rounded-full bg-lime">
+          <div className="relative flex min-w-0 items-center gap-2">
+            <span className="grid size-7 shrink-0 place-items-center rounded-full bg-lime">
               <Sparkles className="size-3.5 text-ink" strokeWidth={1.75} />
             </span>
-            <p className="text-3xl font-medium tracking-tight">Good day, {userName}</p>
+            <p className="min-w-0 truncate text-2xl font-medium tracking-tight sm:text-3xl">Good day, {userName}</p>
           </div>
           <p className="relative mt-1 text-sm text-ink-muted tabular-nums">
             {documents.length} document{documents.length === 1 ? "" : "s"} · {shared.length} shared with you

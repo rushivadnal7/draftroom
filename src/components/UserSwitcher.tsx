@@ -31,12 +31,12 @@ export function UserSwitcher({
         >
           {current.name.charAt(0)}
         </span>
-        <span className="pr-1 text-ink">{current.name}</span>
+        <span className="min-w-0 max-w-24 truncate pr-1 text-ink sm:max-w-none">{current.name}</span>
       </button>
 
       {open && (
         <div
-          className="absolute right-0 top-full z-20 mt-2 w-56 rounded-[var(--radius-panel)] bg-surface p-2 shadow-[var(--shadow-float)]"
+          className="absolute right-0 top-full z-20 mt-2 w-56 max-w-[calc(100vw-1.5rem)] rounded-[var(--radius-panel)] bg-surface p-2 shadow-[var(--shadow-float)]"
           onMouseLeave={() => setOpen(false)}
         >
           <p className="px-2 py-1 text-xs font-medium uppercase tracking-wide text-ink-muted">Switch user</p>

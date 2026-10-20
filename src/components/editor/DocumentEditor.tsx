@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -25,12 +24,16 @@ export function DocumentEditor({
   initialVersion: number;
   role: Role;
 }) {
-  const router = useRouter();
   const isReadOnly = role === "VIEWER";
 
   const [title, setTitle] = useState(initialTitle);
   const [saveState, setSaveState] = useState<SaveState>("saved");
-  const [conflict, setConflict] = useState<{ updatedBy: string } | null>(null);
+  const [conflict, setConflict] = useState<{
+    updatedBy: string;
+    title: string;
+    contentHtml: string;
+    version: number;
+  } | null>(null);
 
   const versionRef = useRef(initialVersion);
   const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -46,7 +49,12 @@ export function DocumentEditor({
 
         if (res.status === 409) {
           const data = await res.json();
-          setConflict({ updatedBy: data.document?.updatedBy?.name ?? "Someone" });
+          setConflict({
+            updatedBy: data.document?.updatedBy?.name ?? "Someone",
+            title: data.document?.title ?? "",
+            contentHtml: data.document?.contentHtml ?? "",
+            version: data.document?.version ?? versionRef.current,
+          });
           setSaveState("error");
           return;
         }
@@ -100,6 +108,18 @@ export function DocumentEditor({
     }
   }
 
+  function loadLatest() {
+    if (!conflict || !editor) return;
+    if (saveTimeout.current) clearTimeout(saveTimeout.current);
+    // emitUpdate: false — this is us syncing to the server's state, not a local
+    // edit, so it must not schedule another autosave of what we just loaded.
+    editor.commands.setContent(conflict.contentHtml, { emitUpdate: false });
+    setTitle(conflict.title);
+    versionRef.current = conflict.version;
+    setConflict(null);
+    setSaveState("saved");
+  }
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="sticky top-0 z-20 flex h-16 items-center justify-between gap-4 border-b border-border bg-surface px-6">
@@ -125,7 +145,7 @@ export function DocumentEditor({
       {conflict && (
         <div className="flex items-center justify-between border-b border-orange bg-orange-soft px-6 py-2 text-sm text-ink">
           <span>{conflict.updatedBy} updated this document.</span>
-          <button type="button" onClick={() => router.refresh()} className="font-medium underline">
+          <button type="button" onClick={loadLatest} className="font-medium underline">
             Load latest
           </button>
         </div>

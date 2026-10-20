@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Share2 } from "lucide-react";
 import { Toolbar } from "./Toolbar";
 import { SaveStatus, type SaveState } from "./SaveStatus";
+import { ShareDialog, type ShareableUser, type ShareEntry } from "@/components/documents/ShareDialog";
 
 type Role = "OWNER" | "EDITOR" | "VIEWER";
 
@@ -17,16 +18,23 @@ export function DocumentEditor({
   initialContentHtml,
   initialVersion,
   role,
+  isOwner,
+  shareableUsers,
+  initialShares,
 }: {
   documentId: string;
   initialTitle: string;
   initialContentHtml: string;
   initialVersion: number;
   role: Role;
+  isOwner: boolean;
+  shareableUsers: ShareableUser[];
+  initialShares: ShareEntry[];
 }) {
   const isReadOnly = role === "VIEWER";
 
   const [title, setTitle] = useState(initialTitle);
+  const [shareOpen, setShareOpen] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("saved");
   const [conflict, setConflict] = useState<{
     updatedBy: string;
@@ -175,8 +183,30 @@ export function DocumentEditor({
             />
           )}
         </div>
-        {!isReadOnly && <SaveStatus state={saveState} />}
+        <div className="flex shrink-0 items-center gap-3">
+          {!isReadOnly && <SaveStatus state={saveState} />}
+          {isOwner && (
+            <button
+              type="button"
+              onClick={() => setShareOpen(true)}
+              className="flex h-9 items-center gap-1.5 rounded-full bg-ink px-4 text-sm font-medium text-white transition hover:bg-ink-soft"
+            >
+              <Share2 className="size-3.5" strokeWidth={1.75} />
+              Share
+            </button>
+          )}
+        </div>
       </div>
+
+      {isOwner && (
+        <ShareDialog
+          open={shareOpen}
+          onClose={() => setShareOpen(false)}
+          documentId={documentId}
+          shareableUsers={shareableUsers}
+          initialShares={initialShares}
+        />
+      )}
 
       {conflict && (
         <div className="flex items-center justify-between border-b border-orange bg-orange-soft px-6 py-2 text-sm text-ink">

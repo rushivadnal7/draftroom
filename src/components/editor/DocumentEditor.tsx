@@ -129,7 +129,7 @@ export function DocumentEditor({
           });
         }
       } catch {
-        // transient poll failure — try again next tick
+        // transient poll failure - try again next tick
       }
     }, 10000);
     return () => clearInterval(interval);
@@ -147,7 +147,7 @@ export function DocumentEditor({
   function loadLatest() {
     if (!conflict || !editor) return;
     if (saveTimeout.current) clearTimeout(saveTimeout.current);
-    // emitUpdate: false — this is us syncing to the server's state, not a local
+    // emitUpdate: false - this is us syncing to the server's state, not a local
     // edit, so it must not schedule another autosave of what we just loaded.
     editor.commands.setContent(conflict.contentHtml, { emitUpdate: false });
     setTitle(conflict.title);

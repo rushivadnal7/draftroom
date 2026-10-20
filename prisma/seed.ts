@@ -44,9 +44,9 @@ async function main() {
     update: {},
     create: {
       id: "doc_sow",
-      title: "Acme Corp — Statement of Work",
+      title: "Acme Corp - Statement of Work",
       contentHtml:
-        "<h1>Acme Corp — Statement of Work</h1><p>This SOW covers the Q1 engagement scope, deliverables, and timeline.</p><h2>Scope</h2><ul><li>Discovery workshops</li><li>Process audit</li><li>Recommendations report</li></ul>",
+        "<h1>Acme Corp - Statement of Work</h1><p>This SOW covers the Q1 engagement scope, deliverables, and timeline.</p><h2>Scope</h2><ul><li>Discovery workshops</li><li>Process audit</li><li>Recommendations report</li></ul>",
       ownerId: alice.id,
     },
   });
@@ -62,7 +62,7 @@ async function main() {
     update: {},
     create: {
       id: "doc_proposal",
-      title: "Project Proposal — Draft",
+      title: "Project Proposal - Draft",
       contentHtml:
         "<h1>Project Proposal</h1><p>Prepared for [CLIENT NAME] by Draftroom Consulting.</p><p>TODO: fill in final budget numbers before sending.</p><h2>Next steps</h2><ol><li>Confirm scope with {{stakeholder}}</li><li>Sign off by [DATE]</li></ol>",
       ownerId: alice.id,

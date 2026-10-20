@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FileText, Plus } from "lucide-react";
 import { Dialog } from "@/components/ui/Dialog";
 import { DocumentCard, type DocSummary } from "./DocumentCard";
+import { ImportCard } from "./ImportCard";
 
 type SharedDocSummary = DocSummary & { role: "EDITOR" | "VIEWER"; ownerName: string };
 
@@ -50,13 +51,14 @@ export function DashboardClient({
 
   return (
     <div className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div className="rounded-[var(--radius-card)] bg-surface p-6 shadow-[var(--shadow-card)]">
           <p className="text-3xl font-medium tracking-tight">Good day, {userName}</p>
           <p className="mt-1 text-sm text-ink-muted tabular-nums">
             {documents.length} document{documents.length === 1 ? "" : "s"} · {shared.length} shared with you
           </p>
         </div>
+        <ImportCard onImported={(id) => router.push(`/documents/${id}`)} />
         <button
           type="button"
           onClick={createDocument}

@@ -51,7 +51,7 @@ function Divider() {
 
 export function Toolbar({ editor }: { editor: Editor }) {
   // Tiptap v3 only re-renders consumers on transactions that pass this selector's
-  // shallow-equality check — without it, toggling a mark with no text selected (or
+  // shallow-equality check - without it, toggling a mark with no text selected (or
   // just moving the cursor) never re-renders the toolbar, so "active" styling only
   // ever catches up after the next keystroke.
   const state = useEditorState({

@@ -25,7 +25,7 @@ export default async function LoginPage() {
           <br />
           Share with confidence.
         </h1>
-        <p className="mt-4 text-center text-sm text-white/60">Draftroom — pick a user to continue.</p>
+        <p className="mt-4 text-center text-sm text-white/60">Draftroom - pick a user to continue.</p>
 
         <div className="mt-10 flex flex-col gap-3">
           {users.map((user) => (

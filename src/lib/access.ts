@@ -7,7 +7,7 @@ type GrantedRole = Exclude<AccessRole, null>;
 /**
  * Single source of truth for "who can do what" on a document. Every route
  * handler that touches a document, its shares, presence, or export must
- * resolve the caller's role through this function — never query
+ * resolve the caller's role through this function - never query
  * Document.ownerId / Share directly for a permission decision.
  */
 export async function getAccessRole(userId: string, documentId: string): Promise<AccessRole> {

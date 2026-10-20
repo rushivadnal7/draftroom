@@ -10,7 +10,7 @@ buttons, one lime accent used sparingly. The writing surface stays quiet; the ch
 
 ## 1. Tokens (single source of truth)
 
-Put these in `src/app/globals.css`. Never hard-code a hex value, radius, shadow, duration or easing in a component —
+Put these in `src/app/globals.css`. Never hard-code a hex value, radius, shadow, duration or easing in a component -
 always use a token. (Tailwind v4 `@theme` syntax; if the project is on Tailwind v3, mirror these in `tailwind.config.ts`.)
 
 ```css

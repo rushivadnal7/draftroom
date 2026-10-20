@@ -51,7 +51,7 @@ const ACTIONS = {
 
 const ROLES = ["OWNER", "EDITOR", "VIEWER", null] as const;
 
-describe("requireRole — full access-control matrix", () => {
+describe("requireRole - full access-control matrix", () => {
   for (const role of ROLES) {
     for (const [action, allowed] of Object.entries(ACTIONS)) {
       const allowedRoles: readonly string[] = allowed;

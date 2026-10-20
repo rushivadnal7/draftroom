@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FileText, Plus } from "lucide-react";
+import { motion } from "motion/react";
+import { FileText, Plus, Sparkles } from "lucide-react";
 import { Dialog } from "@/components/ui/Dialog";
 import { DocumentCard, type DocSummary } from "./DocumentCard";
 import { ImportCard } from "./ImportCard";
@@ -52,22 +53,47 @@ export function DashboardClient({
   return (
     <div className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div className="rounded-[var(--radius-card)] bg-surface p-6 shadow-[var(--shadow-card)]">
-          <p className="text-3xl font-medium tracking-tight">Good day, {userName}</p>
-          <p className="mt-1 text-sm text-ink-muted tabular-nums">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="relative overflow-hidden rounded-[var(--radius-card)] bg-surface p-6 shadow-[var(--shadow-card)]"
+        >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-10 -top-10 size-32 rounded-full opacity-40 blur-2xl"
+            style={{ background: "radial-gradient(circle, var(--color-lime) 0%, transparent 70%)" }}
+          />
+          <div className="relative flex items-center gap-2">
+            <span className="grid size-7 place-items-center rounded-full bg-lime">
+              <Sparkles className="size-3.5 text-ink" strokeWidth={1.75} />
+            </span>
+            <p className="text-3xl font-medium tracking-tight">Good day, {userName}</p>
+          </div>
+          <p className="relative mt-1 text-sm text-ink-muted tabular-nums">
             {documents.length} document{documents.length === 1 ? "" : "s"} · {shared.length} shared with you
           </p>
-        </div>
-        <ImportCard onImported={(id) => router.push(`/documents/${id}`)} />
-        <button
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <ImportCard onImported={(id) => router.push(`/documents/${id}`)} />
+        </motion.div>
+        <motion.button
           type="button"
           onClick={createDocument}
           disabled={creating}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          whileTap={{ scale: 0.97 }}
           className="flex items-center justify-center gap-2 rounded-[var(--radius-card)] bg-ink p-6 text-white shadow-[var(--shadow-card)] transition hover:bg-ink-soft disabled:opacity-60"
         >
           <Plus className="size-4" strokeWidth={1.75} />
           {creating ? "Creating…" : "New document"}
-        </button>
+        </motion.button>
       </div>
 
       <section className="mt-10">
@@ -76,10 +102,11 @@ export function DashboardClient({
           <EmptyState label="No documents yet. Create your first one above." />
         ) : (
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {documents.map((doc) => (
+            {documents.map((doc, index) => (
               <DocumentCard
                 key={doc.id}
                 doc={doc}
+                index={index}
                 rolePillLabel="Owner"
                 rolePillClass="bg-ink text-white"
                 onDelete={() => setDeleteTarget(doc)}
@@ -95,10 +122,11 @@ export function DashboardClient({
           <EmptyState label="Nothing shared with you yet." />
         ) : (
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {shared.map((doc) => (
+            {shared.map((doc, index) => (
               <DocumentCard
                 key={doc.id}
                 doc={doc}
+                index={index}
                 subtitle={`Owned by ${doc.ownerName}`}
                 rolePillLabel={doc.role === "EDITOR" ? "Editor" : "Viewer"}
                 rolePillClass={doc.role === "EDITOR" ? "bg-lime text-ink" : "bg-surface-muted text-ink"}

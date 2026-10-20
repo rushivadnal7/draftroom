@@ -71,7 +71,7 @@ export function Toolbar({ editor }: { editor: Editor }) {
   });
 
   return (
-    <div className="sticky top-[76px] z-10 mx-auto -mt-5 flex w-fit items-center gap-1 rounded-full bg-ink px-1.5 py-1.5 shadow-[var(--shadow-float)]">
+    <div className="sticky top-[76px] z-10 mx-auto -mt-5 flex w-fit items-center gap-1 rounded-full bg-ink/70 px-1.5 py-1.5 shadow-[var(--shadow-float)] backdrop-blur-md backdrop-saturate-150 supports-[not(backdrop-filter:blur(1px))]:bg-ink print:hidden">
       <ToolbarButton label="Bold" active={state.bold} onClick={() => editor.chain().focus().toggleBold().run()}>
         <Bold className="size-4" strokeWidth={1.75} />
       </ToolbarButton>

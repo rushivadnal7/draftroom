@@ -8,7 +8,9 @@ import Underline from "@tiptap/extension-underline";
 import { ArrowLeft, Share2 } from "lucide-react";
 import { Toolbar } from "./Toolbar";
 import { SaveStatus, type SaveState } from "./SaveStatus";
+import { ExportMenu } from "./ExportMenu";
 import { ShareDialog, type ShareableUser, type ShareEntry } from "@/components/documents/ShareDialog";
+import { PresenceAvatars, type PresenceUser } from "@/components/documents/PresenceAvatars";
 
 type Role = "OWNER" | "EDITOR" | "VIEWER";
 
@@ -35,6 +37,7 @@ export function DocumentEditor({
 
   const [title, setTitle] = useState(initialTitle);
   const [shareOpen, setShareOpen] = useState(false);
+  const [others, setOthers] = useState<PresenceUser[]>([]);
   const [saveState, setSaveState] = useState<SaveState>("saved");
   const [conflict, setConflict] = useState<{
     updatedBy: string;
@@ -143,6 +146,28 @@ export function DocumentEditor({
     return () => clearInterval(interval);
   }, [documentId]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function beat() {
+      try {
+        const res = await fetch(`/api/documents/${documentId}/presence`, { method: "POST" });
+        if (!res.ok || cancelled) return;
+        const data = await res.json();
+        setOthers(data.others ?? []);
+      } catch {
+        // transient heartbeat failure - try again next tick
+      }
+    }
+
+    void beat();
+    const interval = setInterval(beat, 10000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [documentId]);
+
   function handleTitleBlur() {
     const trimmed = title.trim() || "Untitled document";
     setTitle(trimmed);
@@ -166,7 +191,7 @@ export function DocumentEditor({
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="sticky top-0 z-20 flex h-16 items-center justify-between gap-4 border-b border-border bg-surface px-6">
+      <div className="sticky top-0 z-20 flex h-16 items-center justify-between gap-4 border-b border-border bg-surface px-6 print:hidden">
         <div className="flex min-w-0 items-center gap-3">
           <Link href="/dashboard" className="grid size-9 shrink-0 place-items-center rounded-full hover:bg-surface-muted">
             <ArrowLeft className="size-4" strokeWidth={1.75} />
@@ -184,7 +209,9 @@ export function DocumentEditor({
           )}
         </div>
         <div className="flex shrink-0 items-center gap-3">
+          <PresenceAvatars users={others} />
           {!isReadOnly && <SaveStatus state={saveState} />}
+          <ExportMenu title={title} getHtml={() => editor?.getHTML() ?? ""} />
           {isOwner && (
             <button
               type="button"
@@ -205,11 +232,13 @@ export function DocumentEditor({
           documentId={documentId}
           shareableUsers={shareableUsers}
           initialShares={initialShares}
+          getContentHtml={() => editor?.getHTML() ?? ""}
+          onFixFirst={() => editor?.commands.focus("start")}
         />
       )}
 
       {conflict && (
-        <div className="flex items-center justify-between border-b border-orange bg-orange-soft px-6 py-2 text-sm text-ink">
+        <div className="flex items-center justify-between border-b border-orange bg-orange-soft px-6 py-2 text-sm text-ink print:hidden">
           <span>{conflict.updatedBy} updated this document.</span>
           <button type="button" onClick={loadLatest} className="font-medium underline">
             Load latest
@@ -218,15 +247,15 @@ export function DocumentEditor({
       )}
 
       {isReadOnly && (
-        <div className="flex h-11 items-center justify-center border-b border-border bg-surface-muted text-sm text-ink-muted">
+        <div className="flex h-11 items-center justify-center border-b border-border bg-surface-muted text-sm text-ink-muted print:hidden">
           View only
         </div>
       )}
 
       {!isReadOnly && editor && <Toolbar editor={editor} />}
 
-      <div className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
-        <div className="min-h-[70vh] rounded-[var(--radius-card)] bg-surface p-12 shadow-[var(--shadow-card)]">
+      <div className="mx-auto w-full max-w-3xl flex-1 px-6 py-10 print:max-w-none print:p-0">
+        <div className="print-area min-h-[70vh] rounded-[var(--radius-card)] bg-surface p-12 shadow-[var(--shadow-card)] print:min-h-0 print:rounded-none print:p-0 print:shadow-none">
           <EditorContent editor={editor} className="prose-editor text-[16px] leading-[1.7]" />
         </div>
       </div>

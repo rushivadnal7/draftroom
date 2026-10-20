@@ -120,3 +120,9 @@ body {
 .prose-editor .ProseMirror > *:first-child {
   margin-top: 0;
 }
+
+@media print {
+  body {
+    background: #fff;
+  }
+}

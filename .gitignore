@@ -37,6 +37,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# submission bundle for the review Drive folder - generated, not source
+/submission
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

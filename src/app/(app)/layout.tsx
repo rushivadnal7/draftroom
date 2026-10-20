@@ -14,9 +14,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   });
 
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-zinc-50">
-      <header className="flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-3">
-        <Link href="/dashboard" className="text-sm font-semibold text-zinc-900">
+    <div className="flex min-h-full flex-1 flex-col">
+      <header className="flex h-16 shrink-0 items-center justify-between border-b border-border bg-surface px-6">
+        <Link href="/dashboard" className="text-sm font-semibold text-ink">
           Draftroom
         </Link>
         <UserSwitcher

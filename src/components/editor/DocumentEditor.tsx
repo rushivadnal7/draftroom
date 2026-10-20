@@ -11,6 +11,7 @@ import { SaveStatus, type SaveState } from "./SaveStatus";
 import { ExportMenu } from "./ExportMenu";
 import { ShareDialog, type ShareableUser, type ShareEntry } from "@/components/documents/ShareDialog";
 import { PresenceAvatars, type PresenceUser } from "@/components/documents/PresenceAvatars";
+import { findFirstPlaceholderPosition } from "@/lib/placeholders-doc";
 
 type Role = "OWNER" | "EDITOR" | "VIEWER";
 
@@ -177,6 +178,18 @@ export function DocumentEditor({
     }
   }
 
+  function jumpToFirstPlaceholder() {
+    if (!editor) return;
+    const match = findFirstPlaceholderPosition(editor.state.doc);
+    if (!match) {
+      editor.commands.focus("start");
+      return;
+    }
+    // Selecting the range is also the "highlight" - the browser's native text
+    // selection makes it visually obvious, no custom decoration needed.
+    editor.chain().focus().setTextSelection(match).scrollIntoView().run();
+  }
+
   function loadLatest() {
     if (!conflict || !editor) return;
     if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -233,7 +246,7 @@ export function DocumentEditor({
           shareableUsers={shareableUsers}
           initialShares={initialShares}
           getContentHtml={() => editor?.getHTML() ?? ""}
-          onFixFirst={() => editor?.commands.focus("start")}
+          onFixFirst={jumpToFirstPlaceholder}
         />
       )}
 

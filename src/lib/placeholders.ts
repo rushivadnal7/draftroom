@@ -14,7 +14,10 @@ function snippetAround(text: string, index: number, length: number): string {
   return `${start > 0 ? "…" : ""}${text.slice(start, end).trim()}${end < text.length ? "…" : ""}`;
 }
 
-const PATTERNS: { type: PlaceholderMatch["type"]; regex: RegExp }[] = [
+// Exported so the live-editor "jump to the first placeholder" logic
+// (lib/placeholders-doc.ts) searches for exactly the same things this
+// reports, instead of a second, potentially-drifting pattern list.
+export const PLACEHOLDER_PATTERNS: { type: PlaceholderMatch["type"]; regex: RegExp }[] = [
   { type: "TODO", regex: /\bTODO\b/g },
   { type: "TBD", regex: /\bTBD\b/g },
   { type: "XXX", regex: /\bXXX\b/g },
@@ -27,7 +30,7 @@ export function findUnfinishedPlaceholders(html: string): PlaceholderMatch[] {
   const text = stripHtml(html);
   const matches: PlaceholderMatch[] = [];
 
-  for (const { type, regex } of PATTERNS) {
+  for (const { type, regex } of PLACEHOLDER_PATTERNS) {
     for (const match of text.matchAll(regex)) {
       if (match.index === undefined) continue;
       matches.push({

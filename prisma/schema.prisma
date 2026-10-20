@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  EDITOR
+  VIEWER
+}
+
+model User {
+  id          String     @id @default(cuid())
+  name        String
+  title       String
+  avatarColor String
+  email       String     @unique
+  documents   Document[] @relation("Owner")
+  updatedDocs Document[] @relation("UpdatedBy")
+  shares      Share[]
+  presences   Presence[]
+}
+
+model Document {
+  id          String     @id @default(cuid())
+  title       String     @default("Untitled document")
+  contentHtml String     @default("") @db.Text
+  version     Int        @default(1)
+  ownerId     String
+  owner       User       @relation("Owner", fields: [ownerId], references: [id])
+  updatedById String?
+  updatedBy   User?      @relation("UpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  shares      Share[]
+  presences   Presence[]
+
+  @@index([ownerId, updatedAt(sort: Desc)])
+}
+
+model Share {
+  id         String   @id @default(cuid())
+  documentId String
+  userId     String
+  role       Role
+  createdAt  DateTime @default(now())
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, userId])
+  @@index([userId])
+}
+
+model Presence {
+  id         String   @id @default(cuid())
+  documentId String
+  userId     String
+  lastSeenAt DateTime
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, userId])
+  @@index([documentId, lastSeenAt])
+}

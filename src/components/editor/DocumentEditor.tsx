@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -98,6 +98,42 @@ export function DocumentEditor({
       }, 800);
     },
   });
+
+  // Polling refs rather than effect deps: the interval is created once per
+  // document and reads the latest state at each tick, so a flurry of
+  // saveState changes while typing doesn't keep restarting (and starving) it.
+  const saveStateRef = useRef(saveState);
+  const hasConflictRef = useRef(Boolean(conflict));
+
+  useEffect(() => {
+    saveStateRef.current = saveState;
+  }, [saveState]);
+
+  useEffect(() => {
+    hasConflictRef.current = Boolean(conflict);
+  }, [conflict]);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (saveStateRef.current === "saving" || hasConflictRef.current) return;
+      try {
+        const res = await fetch(`/api/documents/${documentId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.document.version !== versionRef.current) {
+          setConflict({
+            updatedBy: data.document.updatedBy?.name ?? "Someone",
+            title: data.document.title,
+            contentHtml: data.document.contentHtml,
+            version: data.document.version,
+          });
+        }
+      } catch {
+        // transient poll failure — try again next tick
+      }
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [documentId]);
 
   function handleTitleBlur() {
     const trimmed = title.trim() || "Untitled document";

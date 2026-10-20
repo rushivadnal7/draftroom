@@ -14,6 +14,29 @@ const patchSchema = z.object({
   contentHtml: z.string().optional(),
 });
 
+// Polled client-side every ~10s so an update from another editor surfaces
+// even if the viewer never makes a local edit (and not just on the next save).
+export async function GET(_req: Request, ctx: RouteContext<"/api/documents/[id]">) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) throw new ApiError(401, "Not signed in");
+
+    const { id } = await ctx.params;
+    const role = await getAccessRole(user.id, id);
+    requireRole(role, ["OWNER", "EDITOR", "VIEWER"]);
+
+    const doc = await prisma.document.findUnique({
+      where: { id },
+      include: { updatedBy: { select: { name: true } } },
+    });
+    if (!doc) throw new ApiError(404, "Not found");
+
+    return NextResponse.json({ document: doc });
+  } catch (error) {
+    return errorResponse(error);
+  }
+}
+
 export async function PATCH(req: Request, ctx: RouteContext<"/api/documents/[id]">) {
   try {
     const user = await getCurrentUser();
